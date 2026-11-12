@@ -1,0 +1,358 @@
+.team-page {
+  min-height: 100vh;
+  background-color: #0d1015;
+  color: #f3f4f6;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.team-topbar {
+  background: #131720;
+  border-bottom: 1px solid #222834;
+  padding: 16px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-back-team {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1d2330;
+  color: #e5e7eb;
+  border: 1px solid #2d3546;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-back-team:hover {
+  border-color: #de9b35;
+  color: #de9b35;
+}
+
+.team-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Header do Time */
+.team-header-card {
+  background: #151922;
+  border: 1px solid #252b38;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.team-identity {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.team-logo-img {
+  width: 104px;
+  height: 104px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 2px solid #de9b35;
+}
+
+.team-details-box {
+  max-width: 650px;
+}
+
+.team-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.team-tag-badge {
+  background: #de9b35;
+  color: #111111;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.team-title-row h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.team-description {
+  margin: 0 0 14px 0;
+  color: #9ca3af;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.team-mini-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.team-mini-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #10141c;
+  border: 1px solid #222834;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.btn-edit-team {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1e2430;
+  color: #f3f4f6;
+  border: 1px solid #323b4d;
+  padding: 9px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-edit-team:hover {
+  border-color: #de9b35;
+  color: #de9b35;
+}
+
+/* Form edição do time */
+.team-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  max-width: 520px;
+}
+
+.team-edit-row {
+  display: flex;
+  gap: 10px;
+}
+
+.team-edit-form input,
+.team-edit-form textarea {
+  background: #0d1015;
+  border: 1px solid #2d3546;
+  color: #ffffff;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.team-edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-save-team {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #10b981;
+  color: #111111;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-cancel-team {
+  background: transparent;
+  color: #9ca3af;
+  border: 1px solid #374151;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Elenco / Roster */
+.team-roster-section {
+  background: #151922;
+  border: 1px solid #252b38;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.roster-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #222834;
+}
+
+.roster-header h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.25rem;
+}
+
+.roster-header p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 0.88rem;
+}
+
+.add-member-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.add-member-form input,
+.add-member-form select {
+  background: #0d1015;
+  border: 1px solid #2a3140;
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+}
+
+.btn-add-member {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #de9b35;
+  color: #111111;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-add-member:hover {
+  background: #f0ad4e;
+}
+
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.member-card {
+  background: #10141c;
+  border: 1px solid #222834;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.member-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.member-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2d3546;
+}
+
+.member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.member-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.captain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: #de9b35;
+  background: rgba(222, 155, 53, 0.14);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.member-role-pill {
+  display: inline-block;
+  width: fit-content;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 3px 9px;
+  border-radius: 5px;
+}
+
+.member-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #1d222d;
+}
+
+.role-inline-select {
+  flex: 1;
+  background: #151922;
+  border: 1px solid #282f3d;
+  color: #d1d5db;
+  padding: 6px 8px;
+  border-radius: 5px;
+  font-size: 0.82rem;
+}
+
+.btn-remove-member {
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #ef4444;
+  padding: 6px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-remove-member:hover {
+  background: rgba(239, 68, 68, 0.15);
+}

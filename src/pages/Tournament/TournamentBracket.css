@@ -1,0 +1,300 @@
+.bracket-page {
+  min-height: 100vh;
+  background-color: #0d1015;
+  color: #f3f4f6;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.bracket-topbar {
+  background: #141820;
+  border-bottom: 1px solid #242a36;
+  padding: 20px 5%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1f2430;
+  color: #e5e7eb;
+  border: 1px solid #2e3646;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-back:hover {
+  border-color: #de9b35;
+  color: #de9b35;
+}
+
+.bracket-title-box h1 {
+  margin: 4px 0;
+  font-size: 1.5rem;
+}
+
+.bracket-title-box p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.live-indicator {
+  color: #10b981;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.bracket-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.bracket-tabs button {
+  background: #1a1f29;
+  color: #9ca3af;
+  border: 1px solid #2a3140;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.bracket-tabs button.active {
+  background: #de9b35;
+  color: #111111;
+  border-color: #de9b35;
+}
+
+.bracket-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.bracket-section {
+  background: #151921;
+  border: 1px solid #252b37;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #232936;
+  padding-bottom: 12px;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.accent-icon {
+  color: #de9b35;
+}
+
+/* Playoffs Grid */
+.playoffs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  align-items: center;
+}
+
+.bracket-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.round-label,
+.sub-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  font-weight: 700;
+}
+
+.match-card {
+  background: #1d222d;
+  border: 1px solid #2d3444;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.match-card.grand-final {
+  border-color: #de9b35;
+}
+
+.match-meta {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 10px;
+  background: #171b24;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.team-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-top: 1px solid #262c3a;
+  font-size: 0.9rem;
+}
+
+.team-row.winner {
+  background: rgba(16, 185, 129, 0.08);
+  border-left: 3px solid #10b981;
+  font-weight: 700;
+}
+
+/* GSL */
+.gsl-groups-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+  gap: 20px;
+}
+
+.gsl-group-box {
+  background: #11151c;
+  border: 1px solid #252b37;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.gsl-group-box h3 {
+  margin: 0 0 12px 0;
+  color: #de9b35;
+}
+
+.gsl-subgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Suíço */
+.swiss-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.swiss-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qualified-badge {
+  color: #10b981;
+}
+
+.eliminated-badge {
+  color: #ef4444;
+}
+
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.status-list div {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.status-list.qualified div {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.status-list.eliminated div {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+/* Pontos Corridos */
+.standings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 20px;
+}
+
+.standings-card {
+  background: #11151c;
+  border: 1px solid #252b37;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.standings-card h3 {
+  margin: 0 0 12px 0;
+  color: #de9b35;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.standings-table th,
+.standings-table td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid #222834;
+}
+
+.standings-table th:first-child,
+.standings-table td:first-child {
+  text-align: left;
+}
+
+.standings-table tr.cutoff-row td {
+  border-bottom: 2px dashed #de9b35;
+}
+
+.team-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pos-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.pos-dot.qual {
+  background: #10b981;
+}
+
+.pos-dot.elim {
+  background: #6b7280;
+}

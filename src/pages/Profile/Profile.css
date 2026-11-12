@@ -1,0 +1,359 @@
+.profile-page {
+  min-height: 100vh;
+  background-color: #0d1015;
+  color: #f3f4f6;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.profile-topbar {
+  background: #131720;
+  border-bottom: 1px solid #222834;
+  padding: 16px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-back-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1d2330;
+  color: #e5e7eb;
+  border: 1px solid #2d3546;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-back-profile:hover {
+  border-color: #de9b35;
+  color: #de9b35;
+}
+
+.profile-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header Card */
+.profile-header-card {
+  background: #151922;
+  border: 1px solid #252b38;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.avatar-wrapper {
+  position: relative;
+}
+
+.profile-avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #de9b35;
+}
+
+.player-level {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #de9b35;
+  color: #111111;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.name-row h1 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.role-badge {
+  background: rgba(222, 155, 53, 0.15);
+  color: #de9b35;
+  border: 1px solid rgba(222, 155, 53, 0.45);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.steam-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+
+.steam-meta code {
+  background: #0d1015;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #d1d5db;
+}
+
+.vac-clean {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.team-tag-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #1b202c;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.profile-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-edit-profile,
+.btn-steam-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-edit-profile {
+  background: #de9b35;
+  color: #111111;
+  border: none;
+}
+
+.btn-edit-profile:hover {
+  background: #f0ad4e;
+}
+
+.btn-steam-link {
+  background: #1b2838;
+  color: #ffffff;
+  border: 1px solid #3d6c8e;
+}
+
+.btn-steam-link:hover {
+  filter: brightness(1.15);
+}
+
+/* Edição inline */
+.profile-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-inputs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.edit-inputs input,
+.edit-inputs select {
+  background: #0d1015;
+  border: 1px solid #2d3546;
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-save-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #10b981;
+  color: #111111;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-cancel-edit {
+  background: transparent;
+  color: #9ca3af;
+  border: 1px solid #374151;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Stats Grid */
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.p-stat-card {
+  background: #151922;
+  border: 1px solid #252b38;
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.p-stat-icon {
+  color: #de9b35;
+}
+
+.p-stat-card span {
+  display: block;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+.p-stat-card h3 {
+  margin: 4px 0 0 0;
+  font-size: 1.45rem;
+}
+
+/* Histórico de Partidas */
+.profile-history-card {
+  background: #151922;
+  border: 1px solid #252b38;
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.history-header h2 {
+  margin: 0 0 18px 0;
+  font-size: 1.15rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-row {
+  display: grid;
+  grid-template-columns: 95px 1fr 110px 120px 120px;
+  align-items: center;
+  gap: 12px;
+  background: #10141c;
+  border: 1px solid #222834;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.history-row.win {
+  border-left: 4px solid #10b981;
+}
+
+.history-row.loss {
+  border-left: 4px solid #ef4444;
+}
+
+.match-result-badge {
+  font-weight: 800;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.history-row.win .match-result-badge {
+  color: #10b981;
+}
+
+.history-row.loss .match-result-badge {
+  color: #ef4444;
+}
+
+.match-tournament-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.match-tournament-info small {
+  color: #9ca3af;
+}
+
+.match-score,
+.match-kda {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+
+.match-score span,
+.match-kda span {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.match-date {
+  color: #9ca3af;
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .history-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .match-date {
+    text-align: left;
+  }
+}
