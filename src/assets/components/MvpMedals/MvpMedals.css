@@ -1,0 +1,102 @@
+.mvp-section {
+  background: #151922;
+  border: 1px solid #252b38;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: left;
+}
+
+.mvp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.mvp-header h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  color: #f3f4f6;
+}
+
+.mvp-title-icon {
+  color: #a78bfa;
+}
+
+.mvp-count {
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  color: #c4b5fd;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.mvp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+}
+
+.mvp-medal-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  background: linear-gradient(160deg, #1b202b 0%, #1a1730 100%);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 10px;
+  padding: 18px 12px;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.mvp-medal-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(167, 139, 250, 0.75);
+  box-shadow: 0 8px 22px rgba(139, 92, 246, 0.18);
+}
+
+.mvp-medallion {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  color: #fff;
+  background: radial-gradient(circle at 30% 25%, #c4b5fd, #7c3aed 70%);
+  border: 3px solid #ddd6fe;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.55), inset 0 0 10px rgba(255, 255, 255, 0.25);
+  margin-bottom: 8px;
+}
+
+.mvp-medallion span {
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  margin-top: -2px;
+}
+
+.mvp-medal-card strong {
+  color: #f3f4f6;
+  font-size: 0.9rem;
+}
+
+.mvp-medal-card small {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.mvp-rating {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #c4b5fd;
+}

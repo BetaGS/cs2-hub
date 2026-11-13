@@ -1,0 +1,140 @@
+.trophy-shelf {
+  background: #151922;
+  border: 1px solid #252b38;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: left;
+}
+
+.trophy-shelf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.trophy-shelf-header h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.15rem;
+  color: #f3f4f6;
+}
+
+.trophy-shelf-title-icon {
+  color: #fbbf24;
+}
+
+.trophy-count {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #fbbf24;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.trophy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.trophy-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #1b202b 0%, #231f14 100%);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  border-radius: 10px;
+  padding: 16px;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.trophy-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(251, 191, 36, 0.7);
+  box-shadow: 0 8px 22px rgba(251, 191, 36, 0.12);
+}
+
+.trophy-icon-wrap {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #1a1405;
+  background: radial-gradient(circle at 30% 30%, #fde68a, #f59e0b);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.45);
+}
+
+.trophy-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.trophy-info strong {
+  color: #f3f4f6;
+  font-size: 0.98rem;
+}
+
+.trophy-info small {
+  color: #9ca3af;
+  font-size: 0.78rem;
+}
+
+.trophy-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: 0.76rem;
+}
+
+.trophy-place {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.trophy-date {
+  color: #6b7280;
+}
+
+.trophy-prize {
+  margin-top: 2px;
+  font-size: 0.76rem;
+  color: #34d399;
+  font-weight: 600;
+}
+
+.trophy-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 12px;
+  border: 1px dashed #2d3546;
+  border-radius: 10px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.trophy-empty p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.trophy-mvp-tag {
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(167, 139, 250, 0.6);
+  color: #c4b5fd;
+  font-weight: 800;
+  padding: 0 8px;
+  border-radius: 999px;
+}

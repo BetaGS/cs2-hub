@@ -26,10 +26,10 @@ export default function CreateTeamModal({ isOpen, onClose, onCreateTeam, current
       description:
         newTeam.description || 'Equipa competitiva pronta para disputar os torneios da plataforma.',
       stats: {
-        titles: 0,
         matches: 0,
         winRate: '0%',
       },
+      trophies: [],
       members: [
         {
           id: 1,

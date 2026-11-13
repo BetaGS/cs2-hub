@@ -1,0 +1,49 @@
+.recruiting-page { min-height: 100vh; background: var(--bg); }
+.recruiting-container { max-width: 1240px; margin: 0 auto; padding: 32px 20px 60px; }
+.recruiting-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+.recruiting-head h1 { font-size: 1.9rem; font-weight: 800; }
+.recruiting-head h1 span { color: var(--amber); }
+.recruiting-head p { color: var(--text-muted); max-width: 640px; margin-top: 6px; font-size: 0.92rem; }
+.btn-lft-toggle { background: var(--cyan-soft); color: var(--cyan); border: 1px solid rgba(56,189,248,.5); border-radius: 8px; padding: 10px 16px; font-weight: 700; }
+.demo-note { color: var(--amber); font-size: 0.82rem; margin-bottom: 14px; }
+
+.recruiting-layout { display: grid; grid-template-columns: 1fr 340px; gap: 22px; align-items: start; }
+.recruiting-tabs { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+.recruiting-tabs button { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); color: var(--text-muted);
+  border: 1px solid var(--border); padding: 9px 16px; border-radius: 8px; font-weight: 600; }
+.recruiting-tabs button.active { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
+.recruiting-tabs select { margin-left: auto; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; }
+
+.rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.rec-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 12px; transition: border-color .2s, transform .2s; }
+.rec-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+.rec-card-top { display: flex; align-items: center; gap: 12px; }
+.rec-card-top > div { display: flex; flex-direction: column; gap: 4px; }
+.rec-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
+.role-pill { display: inline-block; font-size: 0.72rem; font-weight: 700; color: var(--cyan); background: var(--cyan-soft); border: 1px solid rgba(56,189,248,.4); padding: 2px 10px; border-radius: 999px; width: fit-content; }
+.role-pill.open { color: var(--amber); background: var(--amber-soft); border-color: rgba(222,155,53,.45); }
+.rec-stats { display: flex; gap: 16px; font-size: 0.82rem; color: var(--text-muted); }
+.rec-stats b { color: var(--text); }
+.rec-desc { color: var(--text-muted); font-size: 0.86rem; }
+.rec-roles { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn-rec { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--amber); color: #0b0e14; border: none; border-radius: 8px; padding: 10px; font-weight: 800; }
+.btn-rec:hover { filter: brightness(1.1); }
+.rec-empty { color: var(--text-muted); font-size: 0.9rem; padding: 18px 0; }
+
+.recruiting-inbox { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; position: sticky; top: 90px; }
+.recruiting-inbox h2 { display: flex; align-items: center; gap: 8px; font-size: 1.05rem; margin-bottom: 14px; }
+.inbox-count { background: var(--danger); color: #fff; font-size: 0.7rem; border-radius: 999px; padding: 1px 8px; }
+.inbox-group h3 { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin: 14px 0 8px; }
+.inbox-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.inbox-player { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.inbox-player img { width: 28px; height: 28px; border-radius: 50%; }
+.inbox-msg { font-size: 0.8rem; color: var(--text-muted); }
+.inbox-actions { display: flex; gap: 8px; }
+.btn-ok, .btn-no { display: inline-flex; align-items: center; gap: 4px; border-radius: 6px; padding: 6px 12px; font-size: 0.78rem; font-weight: 700; border: 1px solid; }
+.btn-ok { color: var(--success); border-color: rgba(52,211,153,.5); background: rgba(52,211,153,.1); }
+.btn-no { color: var(--text-muted); border-color: var(--border); background: transparent; }
+
+@media (max-width: 960px) {
+  .recruiting-layout { grid-template-columns: 1fr; }
+  .recruiting-inbox { position: static; }
+}

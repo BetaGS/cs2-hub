@@ -1,12 +1,12 @@
 :root {
-  --bg-dark: #09090b;
+  --bg-dark: #0b0e14;
   --bg-card: #141419;
   --bg-card-hover: #1c1c24;
-  --accent-orange: #f59e0b;
+  --accent-orange: #de9b35;
   --accent-orange-hover: #d97706;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --border-color: #27272a;
+  --border-color: #121722;
 }
 
 body {
@@ -357,20 +357,8 @@ body {
   border-top: 1px solid var(--border-color);
 }
 
-.prize-info {
-  display: flex;
-  flex-direction: column;
-}
 
-.prize-info small {
-  color: var(--text-muted);
-  font-size: 0.75rem;
-}
 
-.prize-info strong {
-  color: var(--accent-orange);
-  font-size: 1.1rem;
-}
 
 .btn-join {
   background-color: var(--bg-dark);
@@ -509,7 +497,7 @@ body {
 
 .btn-register {
   background: #de9b35;
-  color: #111111;
+  color: #121722;
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
@@ -519,5 +507,11 @@ body {
 }
 
 .btn-register:hover {
-  background: #f0ad4e;
+  background: #de9b35;
 }
+.trophy-info-mini { display: flex; align-items: center; gap: 10px; color: var(--tc, var(--amber)); }
+.trophy-info-mini small { display: block; color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.4px; }
+.trophy-info-mini strong { color: var(--text); font-size: 0.88rem; }
+.demo-note { color: var(--amber); font-size: 0.82rem; margin-bottom: 14px; }
+.live-section { padding-top: 0; }
+.live-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }

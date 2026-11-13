@@ -1,107 +1,67 @@
-import { useState } from 'react';
-import { Trophy, Users, Calendar, Search, Swords, X, RefreshCw } from 'lucide-react';
-import Navbar from '../../assets/components/Navbar/Navbar.jsx';
+import { useEffect, useState } from 'react';
+import { Trophy, Users, Calendar, Search, Swords, X, RefreshCw, Crown, Shield, Star, Flame } from 'lucide-react';
+import Navbar from '../../components/Navbar/Navbar.jsx';
+import MatchCard from '../../components/MatchCard/MatchCard.jsx';
+import { api, getToken, useFetch } from '../../api.js';
+import { MOCK_MATCHES, MOCK_TOURNAMENTS } from '../../mockData.js';
 import './Home.css';
 
-const TOURNAMENT_TEMPLATES = [
-  {
-    templateId: 'gsl-playoffs',
-    baseTitle: 'Copa GSL Pro Series',
-    roomNumber: 1,
-    format: '5v5',
-    type: 'Grupos GSL (MD3) + Mata-Mata',
-    currentTeams: 7,
-    maxTeams: 8,
-    prize: 'R$ 1.500',
-    startDate: 'Inicia ao lotar',
-    status: 'Inscrições Abertas',
-    banner: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80',
-    rules: 'Fase de grupos em formato GSL (Upper e Lower Bracket) com partidas MD3. Os 3 melhores de cada grupo avançam aos Playoffs (Quartas, Semis MD3 e Grande Final MD5).',
-  },
-  {
-    templateId: 'swiss-playoffs',
-    baseTitle: 'Major Swiss Qualifier',
-    roomNumber: 1,
-    format: '5v5',
-    type: 'Sistema Suíço (3 Vitórias) + Mata-Mata',
-    currentTeams: 15,
-    maxTeams: 16,
-    prize: 'Skins Covert + Vaga',
-    startDate: 'Inicia ao lotar',
-    status: 'Inscrições Abertas',
-    banner: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80',
-    rules: 'Fase Suíça de 16 equipes: 3 vitórias classificam para os Playoffs (3-0, 3-1, 3-2) e 3 derrotas eliminam. Mata-mata em eliminação simples com disputa de 3º lugar.',
-  },
-  {
-    templateId: 'round-robin-playoffs',
-    baseTitle: 'Liga Pontos Corridos',
-    roomNumber: 1,
-    format: '5v5',
-    type: 'Grupos Pontos Corridos + Mata-Mata',
-    currentTeams: 10,
-    maxTeams: 12,
-    prize: 'R$ 2.000',
-    startDate: 'Inicia ao lotar',
-    status: 'Inscrições Abertas',
-    banner: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80',
-    rules: '2 grupos de 6 equipes jogando todos contra todos (pontos corridos). Top 3 de cada grupo avança para os Playoffs com definição de 3º e 5º lugar.',
-  },
-];
+const TROPHY_ICONS = { trophy: Trophy, crown: Crown, shield: Shield, star: Star, flame: Flame };
 
 export default function Home({ onNavigate, user, onLogout, onOpenCreateTeam }) {
-  const [tournaments, setTournaments] = useState(
-    TOURNAMENT_TEMPLATES.map((t) => ({
-      ...t,
-      id: `${t.templateId}-1`,
-      title: `${t.baseTitle} #1`,
-    }))
-  );
+  const { data, loading, offline, reload } = useFetch('/api/tournaments', MOCK_TOURNAMENTS);
+  const { data: liveMatches } = useFetch('/api/matches', MOCK_MATCHES.slice(-4));
+  const [tournaments, setTournaments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('Todos');
   const [selectedTournament, setSelectedTournament] = useState(null);
+  const [toast, setToast] = useState(null);
 
-  const goTo = (path, data = null) => {
-    if (onNavigate) onNavigate(path, data);
+  useEffect(() => {
+    if (data) setTournaments(data);
+  }, [data]);
+
+  const showToast = (text, type = 'success') => {
+    setToast({ text, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  const goTo = (path, payload = null) => {
+    if (onNavigate) onNavigate(path, payload);
     else window.location.href = path;
   };
 
-  const handleJoinTournament = (tournamentId) => {
-    setTournaments((prevTournaments) => {
-      const updatedList = [];
-
-      for (const t of prevTournaments) {
-        if (t.id === tournamentId && t.status === 'Inscrições Abertas') {
-          const nextCount = t.currentTeams + 1;
-          const isFull = nextCount >= t.maxTeams;
-
-          const updatedRoom = {
-            ...t,
-            currentTeams: nextCount,
-            status: isFull ? 'Em Andamento' : 'Inscrições Abertas',
-            startDate: isFull ? 'Em jogo agora' : t.startDate,
-          };
-          updatedList.push(updatedRoom);
-
-          if (isFull) {
-            const nextRoomNumber = t.roomNumber + 1;
-            updatedList.push({
-              ...t,
-              id: `${t.templateId}-${nextRoomNumber}-${Date.now()}`,
-              roomNumber: nextRoomNumber,
-              title: `${t.baseTitle} #${nextRoomNumber}`,
-              currentTeams: 0,
-              status: 'Inscrições Abertas',
-              startDate: 'Inicia ao lotar',
-            });
-          }
-        } else {
-          updatedList.push(t);
-        }
+  // Inscrição: com back-end usa a API (só o capitão); offline simula a fila contínua.
+  const handleJoinTournament = async (tournamentId) => {
+    if (!offline) {
+      if (!getToken()) return goTo('/login');
+      try {
+        await api(`/api/tournaments/${tournamentId}/register`, { method: 'POST' });
+        showToast('Time inscrito com sucesso!');
+        reload();
+      } catch (err) {
+        showToast(err.message, 'error');
       }
-
-      return updatedList;
+      setSelectedTournament(null);
+      return;
+    }
+    setTournaments((prev) => {
+      const list = [];
+      for (const t of prev) {
+        if (t.id === tournamentId && t.statusCode === 'REGISTRATION') {
+          const next = t.currentTeams + 1;
+          const full = next >= t.maxTeams;
+          list.push({ ...t, currentTeams: next, status: full ? 'Em Andamento' : 'Inscrições Abertas',
+            statusCode: full ? 'RUNNING' : 'REGISTRATION', startDate: full ? 'Em jogo agora' : t.startDate });
+          if (full) {
+            const n = t.roomNumber + 1;
+            list.push({ ...t, id: Date.now(), roomNumber: n, title: `${t.title.split(' #')[0]} #${n}`,
+              currentTeams: 0, status: 'Inscrições Abertas', statusCode: 'REGISTRATION', startDate: 'Inicia ao lotar' });
+          }
+        } else list.push(t);
+      }
+      return list;
     });
-
     setSelectedTournament(null);
   };
 
@@ -180,6 +140,9 @@ export default function Home({ onNavigate, user, onLogout, onOpenCreateTeam }) {
 
         <h2 className="section-title">Filas de Torneios Disponíveis</h2>
 
+        {loading && <div className="tournaments-grid">{[0, 1, 2].map((i) => <div key={i} className="skeleton" style={{ height: 320 }} />)}</div>}
+        {offline && <p className="demo-note">Modo demonstração: back-end offline, exibindo dados de exemplo.</p>}
+
         <div className="tournaments-grid">
           {filteredTournaments.map((tournament) => (
             <div key={tournament.id} className="tournament-card">
@@ -215,14 +178,19 @@ export default function Home({ onNavigate, user, onLogout, onOpenCreateTeam }) {
                 </div>
 
                 <div className="card-footer">
-                  <div className="prize-info">
-                    <small>Premiação</small>
-                    <strong>{tournament.prize}</strong>
+                  <div className="trophy-info-mini" style={{ '--tc': tournament.trophy?.color }}>
+                    {(() => { const Icon = TROPHY_ICONS[tournament.trophy?.icon] || Trophy; return <Icon size={16} />; })()}
+                    <div>
+                      <small>Troféu exclusivo</small>
+                      <strong>{tournament.trophy?.name}</strong>
+                    </div>
                   </div>
                   <button
                     className="btn-join"
                     onClick={() => {
                       if (tournament.status === 'Em Andamento') {
+                        goTo('/torneio', tournament);
+                      } else if (tournament.statusCode === 'FINISHED') {
                         goTo('/torneio', tournament);
                       } else {
                         setSelectedTournament(tournament);
@@ -237,6 +205,19 @@ export default function Home({ onNavigate, user, onLogout, onOpenCreateTeam }) {
           ))}
         </div>
       </main>
+
+      {liveMatches?.length > 0 && (
+        <section className="main-content live-section">
+          <h2 className="section-title">Partidas em Destaque</h2>
+          <div className="live-grid">
+            {liveMatches.map((m) => (
+              <MatchCard key={m.id} match={m} onOpen={(match) => goTo(`/partida/${match.id}`)} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {toast && <div className={`toast ${toast.type}`}>{toast.text}</div>}
 
       {/* Modal: Detalhes do Torneio */}
       {selectedTournament && (
@@ -255,7 +236,7 @@ export default function Home({ onNavigate, user, onLogout, onOpenCreateTeam }) {
               </div>
               <div className="modal-info-row">
                 <span><strong>Status:</strong> {selectedTournament.status}</span>
-                <span><strong>Prêmio:</strong> {selectedTournament.prize}</span>
+                <span><strong>Troféu:</strong> {selectedTournament.trophy?.name} (gratuito)</span>
               </div>
               <div className="modal-rules">
                 <h4>Regras da Competição</h4>

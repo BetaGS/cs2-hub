@@ -1,0 +1,103 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+
+.modal-card {
+  background: #161b24;
+  border: 1px solid #2a3242;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  color: #f3f4f6;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #242b38;
+}
+
+.modal-header h3 {
+  margin: 0;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.modal-form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-row {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #d1d5db;
+}
+
+.modal-field input,
+.modal-field select,
+.modal-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: #121722;
+  border: 1px solid #2b3342;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.92rem;
+}
+
+.modal-field input:focus,
+.modal-field select:focus,
+.modal-field textarea:focus {
+  outline: none;
+  border-color: #de9b35;
+}
+
+.modal-actions {
+  padding-top: 6px;
+}
+
+.btn-submit-team {
+  width: 100%;
+  background: #de9b35;
+  color: #121722;
+  border: none;
+  padding: 11px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-submit-team:hover {
+  background: #de9b35;
+}.modal-error { color: var(--danger); font-size: 0.85rem; margin-bottom: 8px; }

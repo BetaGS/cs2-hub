@@ -3,13 +3,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg-dark, #09090b);
+  background-color: var(--bg-dark, #0b0e14);
   padding: 2rem 1rem;
 }
 
 .auth-card {
   background-color: var(--bg-card, #141419);
-  border: 1px solid var(--border-color, #27272a);
+  border: 1px solid var(--border-color, #121722);
   border-radius: 12px;
   width: 100%;
   max-width: 420px;
@@ -23,7 +23,7 @@
 }
 
 .auth-logo-icon {
-  color: var(--accent-orange, #f59e0b);
+  color: var(--accent-orange, #de9b35);
   margin-bottom: 0.5rem;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .auth-header h2 span {
-  color: var(--accent-orange, #f59e0b);
+  color: var(--accent-orange, #de9b35);
 }
 
 .auth-header p {
@@ -68,7 +68,7 @@
 }
 
 .btn-steam-auth.highlight {
-  border-color: var(--accent-orange, #f59e0b);
+  border-color: var(--accent-orange, #de9b35);
 }
 
 .steam-icon {
@@ -101,7 +101,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: #10b981;
+  color: #34d399;
 }
 
 /* Divisor */
@@ -116,7 +116,7 @@
 .auth-divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #27272a;
+  border-bottom: 1px solid #121722;
 }
 
 .auth-divider span {
@@ -147,8 +147,8 @@
 }
 
 .form-group input {
-  background-color: #09090b;
-  border: 1px solid #27272a;
+  background-color: #0b0e14;
+  border: 1px solid #121722;
   color: #fff;
   padding: 0.75rem;
   border-radius: 6px;
@@ -158,7 +158,7 @@
 }
 
 .form-group input:focus {
-  border-color: var(--accent-orange, #f59e0b);
+  border-color: var(--accent-orange, #de9b35);
 }
 
 .btn-auth-submit {
@@ -166,7 +166,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: var(--accent-orange, #f59e0b);
+  background-color: var(--accent-orange, #de9b35);
   color: #000;
   border: none;
   padding: 0.75rem;
@@ -189,7 +189,7 @@
 }
 
 .auth-footer a {
-  color: var(--accent-orange, #f59e0b);
+  color: var(--accent-orange, #de9b35);
   text-decoration: none;
   font-weight: 600;
 }
@@ -227,4 +227,4 @@
 
 .btn-back-home:hover {
   color: #de9b35;
-}
+}.auth-error { color: var(--danger); background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.4); border-radius: 8px; padding: 8px 12px; font-size: .85rem; margin: 10px 0; }

@@ -1,18 +1,27 @@
 import { useState } from 'react';
 import { Shield, LogIn, ArrowLeft } from 'lucide-react';
+import { api, setToken } from '../../api.js';
 import './Auth.css';
 
-export default function Login({ onNavigate }) {
+export default function Login({ onNavigate, onLogin }) {
+  const [error, setError] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSteamLogin = () => {
-    window.location.href = 'http://localhost:8000/api/auth/steam';
+    setError('Login com a Steam ainda não está disponível — entre com e-mail e senha.');
   };
 
-  const handleEmailLogin = (e) => {
+  const handleEmailLogin = async (e) => {
     e.preventDefault();
-    console.log('Login local:', { email, password });
+    setError('');
+    try {
+      const { token, user } = await api('/api/auth/login', { method: 'POST', body: { email, password } });
+      setToken(token);
+      if (onLogin) onLogin(user);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const handleGoHome = (e) => {
@@ -53,6 +62,7 @@ export default function Login({ onNavigate }) {
         </div>
 
         {/* Formulário Tradicional */}
+        {error && <p className="auth-error">{error}</p>}
         <form onSubmit={handleEmailLogin} className="auth-form">
           <div className="form-group">
             <label>E-mail</label>

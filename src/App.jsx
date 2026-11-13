@@ -5,7 +5,12 @@ import Register from './pages/Auth/Register';
 import TournamentBracket from './pages/Tournament/TournamentBracket';
 import Profile from './pages/Profile/Profile';
 import TeamProfile from './pages/Team/TeamProfile';
-import CreateTeamModal from './components/CreateTeamModal.jsx';
+import Recruiting from './pages/Recruiting/Recruiting';
+import MatchRoom from './pages/MatchRoom/MatchRoom';
+import CreateTeamModal from './components/CreateTeamModal/CreateTeamModal.jsx';
+import { api, getToken, setToken } from './api.js';
+
+const withName = (u) => (u ? { ...u, name: u.nickname || u.name } : null);
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -19,50 +24,56 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // Restaura a sessão (token salvo) ao abrir o site.
+  useEffect(() => {
+    if (!getToken()) return;
+    api('/api/auth/me')
+      .then((u) => setUser(withName(u)))
+      .catch((err) => { if (!err.offline) setToken(null); });
+  }, []);
+
   const navigate = (path, data = null) => {
-    if (data) setPageData(data);
+    setPageData(data);
     window.history.pushState({}, '', path);
     setCurrentPath(path);
     window.scrollTo(0, 0);
   };
 
+  const handleLogin = (u) => {
+    setUser(withName(u));
+    navigate('/');
+  };
+
+  const handleLogout = () => {
+    setToken(null);
+    setUser(null);
+    navigate('/');
+  };
+
   const handleTeamCreated = (createdTeam) => {
     setIsCreateTeamOpen(false);
+    if (getToken()) api('/api/auth/me').then((u) => setUser(withName(u))).catch(() => {});
     navigate('/time', createdTeam);
   };
 
+  const common = {
+    onNavigate: navigate,
+    user,
+    onLogout: handleLogout,
+    onOpenCreateTeam: () => setIsCreateTeamOpen(true),
+  };
+  const matchRoute = currentPath.match(/^\/partida\/(\d+)\/?$/);
+
   return (
     <>
-      {currentPath === '/login' && <Login onNavigate={navigate} />}
-      {currentPath === '/register' && <Register onNavigate={navigate} />}
-      {currentPath === '/torneio' && (
-        <TournamentBracket tournament={pageData} onNavigate={navigate} />
-      )}
-      {currentPath === '/perfil' && (
-        <Profile
-          onNavigate={navigate}
-          user={user}
-          onLogout={() => setUser(null)}
-          onOpenCreateTeam={() => setIsCreateTeamOpen(true)}
-        />
-      )}
-      {currentPath === '/time' && (
-        <TeamProfile
-          teamData={pageData}
-          onNavigate={navigate}
-          user={user}
-          onLogout={() => setUser(null)}
-          onOpenCreateTeam={() => setIsCreateTeamOpen(true)}
-        />
-      )}
-      {currentPath === '/' && (
-        <Home
-          onNavigate={navigate}
-          user={user}
-          onLogout={() => setUser(null)}
-          onOpenCreateTeam={() => setIsCreateTeamOpen(true)}
-        />
-      )}
+      {currentPath === '/login' && <Login onNavigate={navigate} onLogin={handleLogin} />}
+      {currentPath === '/register' && <Register onNavigate={navigate} onLogin={handleLogin} />}
+      {currentPath === '/torneio' && <TournamentBracket tournament={pageData} onNavigate={navigate} />}
+      {currentPath === '/perfil' && <Profile {...common} playerId={pageData?.playerId} />}
+      {currentPath === '/time' && <TeamProfile {...common} teamData={pageData?.members ? pageData : null} teamId={pageData?.teamId} />}
+      {currentPath === '/recrutamento' && <Recruiting {...common} />}
+      {matchRoute && <MatchRoom matchId={matchRoute[1]} user={user} onNavigate={navigate} />}
+      {currentPath === '/' && <Home {...common} />}
 
       <CreateTeamModal
         isOpen={isCreateTeamOpen}

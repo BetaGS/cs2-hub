@@ -1,259 +1,181 @@
-import { useState } from 'react';
-import { ArrowLeft, Trophy, Swords } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { ArrowLeft, Crown, Flame, Shield, Star, Swords, Trophy, Users } from 'lucide-react';
+import MatchCard, { TeamBadge } from '../../components/MatchCard/MatchCard.jsx';
+import { createSocket, useFetch } from '../../api.js';
+import { MOCK_TOURNAMENTS, mockTournamentDetail } from '../../mockData.js';
 import './TournamentBracket.css';
 
+const ICONS = { trophy: Trophy, crown: Crown, shield: Shield, star: Star, flame: Flame };
+
+const groupBy = (list, keyFn) => list.reduce((acc, item) => {
+  const k = keyFn(item);
+  (acc[k] = acc[k] || []).push(item);
+  return acc;
+}, {});
+
+/** Tabela de classificação calculada a partir das partidas finalizadas (3 pts por vitória). */
+function buildStandings(teams, matches) {
+  const rows = Object.fromEntries(teams.map((t) => [t.teamId, { team: t, played: 0, wins: 0, losses: 0, points: 0, diff: 0 }]));
+  matches.filter((m) => m.status === 'FINISHED').forEach((m) => {
+    [[m.team1, m.score1, m.score2], [m.team2, m.score2, m.score1]].forEach(([tm, pf, pa]) => {
+      const r = tm && rows[tm.id];
+      if (!r) return;
+      r.played += 1; r.diff += pf - pa;
+      if (m.winnerId === tm.id) { r.wins += 1; r.points += 3; } else r.losses += 1;
+    });
+  });
+  return Object.values(rows).sort((a, b) => b.points - a.points || b.diff - a.diff);
+}
+
 export default function TournamentBracket({ tournament, onNavigate }) {
-  const currentTournament = tournament || {
-    title: 'Copa GSL Pro Series #1',
-    templateId: 'gsl-playoffs',
-    type: 'Grupos GSL (MD3) + Mata-Mata',
-    prize: 'R$ 1.500',
-    status: 'Em Andamento',
-  };
+  const base = tournament || MOCK_TOURNAMENTS[0];
+  const { data, loading, offline, reload } = useFetch(`/api/tournaments/${base.id}`, mockTournamentDetail(base));
+  const [tab, setTab] = useState(null);
 
-  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'groups' | 'playoffs'
+  useEffect(() => {
+    if (offline) return undefined;
+    const socket = createSocket();
+    socket.on('connect', () => socket.emit('join_tournament', { tournamentId: base.id }));
+    socket.on('bracket_update', reload);   // chaves atualizam em tempo real
+    return () => socket.disconnect();
+  }, [offline, base.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleBack = (e) => {
-    e.preventDefault();
-    if (onNavigate) onNavigate('/');
-    else window.location.href = '/';
-  };
+  const t = data || base;
+  const regs = t.registrations || [];
+  const matches = t.matches || [];
+  const open = (m) => onNavigate(`/partida/${m.id}`);
+  const activeTab = tab || (t.statusCode === 'REGISTRATION' ? 'teams' : 'initial');
+  const Icon = ICONS[t.trophy?.icon] || Trophy;
+  const champion = regs.find((r) => r.teamId === t.championTeamId);
+
+  const initial = matches.filter((m) => m.stage !== 'PLAYOFF');
+  const playoffs = matches.filter((m) => m.stage === 'PLAYOFF');
+  const playoffRounds = useMemo(() => groupBy(playoffs, (m) => m.roundNumber), [playoffs]);
+  const emptySlots = Math.max(0, (t.maxTeams || 0) - regs.length);
 
   return (
     <div className="bracket-page">
-      {/* Topbar */}
       <header className="bracket-topbar">
-        <button onClick={handleBack} className="btn-back">
-          <ArrowLeft size={18} />
-          <span>Voltar às Filas</span>
-        </button>
+        <button onClick={() => onNavigate('/')} className="btn-back"><ArrowLeft size={18} /><span>Voltar às Filas</span></button>
 
         <div className="bracket-title-box">
-          <span className="live-indicator">● {currentTournament.status}</span>
-          <h1>{currentTournament.title}</h1>
-          <p>{currentTournament.type} • Premiação: <strong>{currentTournament.prize}</strong></p>
+          <span className="live-indicator">● {t.status}</span>
+          <h1>{t.title}</h1>
+          <p>{t.type} • Torneio gratuito</p>
+          <div className="trophy-ident" style={{ '--tc': t.trophy?.color }}>
+            <Icon size={16} /> <span>{t.trophy?.name}</span>
+          </div>
         </div>
 
         <div className="bracket-tabs">
-          <button
-            className={activeTab === 'all' ? 'active' : ''}
-            onClick={() => setActiveTab('all')}
-          >
-            Visão Geral
+          <button className={activeTab === 'teams' ? 'active' : ''} onClick={() => setTab('teams')}>Times ({regs.length}/{t.maxTeams})</button>
+          <button className={activeTab === 'initial' ? 'active' : ''} onClick={() => setTab('initial')}>
+            {t.format === 'SWISS' ? 'Fase Suíça' : 'Fase de Grupos'}
           </button>
-          <button
-            className={activeTab === 'groups' ? 'active' : ''}
-            onClick={() => setActiveTab('groups')}
-          >
-            Fase de Grupos
-          </button>
-          <button
-            className={activeTab === 'playoffs' ? 'active' : ''}
-            onClick={() => setActiveTab('playoffs')}
-          >
-            Playoffs
-          </button>
+          <button className={activeTab === 'playoffs' ? 'active' : ''} onClick={() => setTab('playoffs')}>Playoffs</button>
         </div>
       </header>
 
       <main className="bracket-container">
-        {/* SEÇÃO 1: PLAYOFFS */}
-        {(activeTab === 'all' || activeTab === 'playoffs') && (
+        {offline && <p className="demo-note">Modo demonstração: back-end offline, exibindo dados de exemplo.</p>}
+        {loading && <div className="skeleton" style={{ height: 260 }} />}
+
+        {champion && (
+          <section className="champion-banner" style={{ '--tc': t.trophy?.color }}>
+            <Icon size={34} />
+            <div><small>Campeão</small><TeamBadge team={{ ...champion, id: champion.teamId }} size="lg" /></div>
+          </section>
+        )}
+
+        {/* ===== TIMES INSCRITOS (estilo HLTV) ===== */}
+        {activeTab === 'teams' && (
           <section className="bracket-section">
-            <div className="section-header">
-              <Trophy size={20} className="accent-icon" />
-              <h2>Playoffs — Single Elimination Bracket</h2>
-            </div>
-
-            <div className="playoffs-grid">
-              {/* Quartas de Final */}
-              <div className="bracket-column">
-                <span className="round-label">Quartas de Final (MD3)</span>
-                <div className="match-card">
-                  <div className="match-meta"><span>05:00</span><span>BO3</span></div>
-                  <div className="team-row winner"><span>Vitality</span><strong>2</strong></div>
-                  <div className="team-row"><span>MOUZ</span><strong>1</strong></div>
-                </div>
-                <div className="match-card">
-                  <div className="match-meta"><span>07:30</span><span>BO3</span></div>
-                  <div className="team-row"><span>G2</span><strong>0</strong></div>
-                  <div className="team-row winner"><span>Falcons</span><strong>2</strong></div>
-                </div>
-              </div>
-
-              {/* Semifinais */}
-              <div className="bracket-column">
-                <span className="round-label">Semifinais (MD3)</span>
-                <div className="match-card">
-                  <div className="match-meta"><span>Sábado • 05:00</span><span>BO3</span></div>
-                  <div className="team-row winner"><span>Spirit</span><strong>2</strong></div>
-                  <div className="team-row"><span>Vitality</span><strong>1</strong></div>
-                </div>
-                <div className="match-card">
-                  <div className="match-meta"><span>Sábado • 07:30</span><span>BO3</span></div>
-                  <div className="team-row winner"><span>FURIA</span><strong>2</strong></div>
-                  <div className="team-row"><span>Falcons</span><strong>0</strong></div>
-                </div>
-              </div>
-
-              {/* Grande Final */}
-              <div className="bracket-column">
-                <span className="round-label">Grande Final (MD5)</span>
-                <div className="match-card grand-final">
-                  <div className="match-meta"><span>Domingo • 16:00</span><span>BO5</span></div>
-                  <div className="team-row"><span>Spirit</span><strong>-</strong></div>
-                  <div className="team-row"><span>FURIA</span><strong>-</strong></div>
-                </div>
-              </div>
+            <div className="section-header"><Users size={20} className="accent-icon" /><h2>Times Inscritos</h2></div>
+            <div className="teams-grid">
+              {regs.map((r) => (
+                <article key={r.teamId} className="reg-card">
+                  {r.logo ? <img src={r.logo} alt={`Logo ${r.name}`} className="reg-logo" /> : <div className="reg-logo reg-fallback">{r.tag}</div>}
+                  <h3>{r.name}</h3>
+                  <span className="reg-tag">[{r.tag}]{r.group ? ` • Grupo ${r.group}` : ''}</span>
+                  <ul className="reg-lineup">
+                    {r.lineup.map((p) => (
+                      <li key={p.userId ?? p.nickname}><b>{p.nickname}</b><span>{p.role}</span></li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+              {Array.from({ length: emptySlots }).map((_, i) => (
+                <article key={`empty-${i}`} className="reg-card empty"><div className="reg-logo reg-fallback">?</div><h3>Vaga aberta</h3></article>
+              ))}
             </div>
           </section>
         )}
 
-        {/* SEÇÃO 2: FASE DE GRUPOS */}
-        {(activeTab === 'all' || activeTab === 'groups') && (
+        {/* ===== FASE INICIAL ===== */}
+        {activeTab === 'initial' && (
           <section className="bracket-section">
-            <div className="section-header">
-              <Swords size={20} className="accent-icon" />
-              <h2>Fase de Grupos</h2>
-            </div>
+            <div className="section-header"><Swords size={20} className="accent-icon" /><h2>{t.format === 'SWISS' ? 'Sistema Suíço' : 'Fase de Grupos'}</h2></div>
+            {initial.length === 0 && <p className="empty-note">As partidas serão geradas automaticamente quando as {t.maxTeams} vagas forem preenchidas.</p>}
 
-            {/* MODELO 1: GSL */}
-            {currentTournament.templateId === 'gsl-playoffs' && (
-              <div className="gsl-groups-wrapper">
-                {['Grupo A', 'Grupo B'].map((groupName, idx) => (
-                  <div key={groupName} className="gsl-group-box">
-                    <h3>{groupName}</h3>
-                    <div className="gsl-subgrid">
-                      <div>
-                        <span className="sub-label">Upper Bracket • Opening (MD3)</span>
-                        <div className="match-card">
-                          <div className="team-row"><span>{idx === 0 ? 'Legacy' : 'Spirit'}</span><strong>{idx === 0 ? '0' : '2'}</strong></div>
-                          <div className="team-row winner"><span>{idx === 0 ? 'FURIA' : 'FUT'}</span><strong>{idx === 0 ? '2' : '1'}</strong></div>
-                        </div>
-                        <div className="match-card">
-                          <div className="team-row winner"><span>{idx === 0 ? 'Vitality' : 'MOUZ'}</span><strong>{idx === 0 ? '2' : '1'}</strong></div>
-                          <div className="team-row"><span>{idx === 0 ? 'Falcons' : 'G2'}</span><strong>{idx === 0 ? '0' : '2'}</strong></div>
-                        </div>
-
-                        <span className="sub-label" style={{ marginTop: '16px', display: 'block' }}>
-                          Lower Bracket • Eliminação (MD3)
-                        </span>
-                        <div className="match-card">
-                          <div className="team-row"><span>{idx === 0 ? 'Legacy' : 'FUT'}</span><strong>0</strong></div>
-                          <div className="team-row winner"><span>{idx === 0 ? 'Falcons' : 'MOUZ'}</span><strong>2</strong></div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="sub-label">Upper Final (MD3)</span>
-                        <div className="match-card">
-                          <div className="team-row winner"><span>{idx === 0 ? 'FURIA' : 'Spirit'}</span><strong>2</strong></div>
-                          <div className="team-row"><span>{idx === 0 ? 'Vitality' : 'G2'}</span><strong>1</strong></div>
-                        </div>
-                      </div>
-                    </div>
+            {t.format === 'SWISS' ? (
+              <div className="swiss-wrapper">
+                {Object.entries(groupBy(initial, (m) => m.roundNumber)).map(([round, list]) => (
+                  <div key={round} className="swiss-column">
+                    <span className="round-label">Rodada {round}</span>
+                    {list.map((m) => <MatchCard key={m.id} match={m} onOpen={open} />)}
                   </div>
                 ))}
               </div>
-            )}
-
-            {/* MODELO 2: SISTEMA SUÍÇO (3 VITÓRIAS) */}
-            {currentTournament.templateId === 'swiss-playoffs' && (
-              <div className="swiss-wrapper">
-                <div className="swiss-column">
-                  <span className="round-label">Rodada 1 (0:0)</span>
-                  <div className="match-card"><div className="team-row"><span>FURIA</span><span>vs</span><span>Falcons</span></div></div>
-                  <div className="match-card"><div className="team-row"><span>Vitality</span><span>vs</span><span>G2</span></div></div>
-                  <div className="match-card"><div className="team-row"><span>Spirit</span><span>vs</span><span>MOUZ</span></div></div>
-                  <div className="match-card"><div className="team-row"><span>NAVI</span><span>vs</span><span>Aurora</span></div></div>
-                </div>
-
-                <div className="swiss-column">
-                  <span className="round-label">Avançam (2:0 / 2:1)</span>
-                  <div className="match-card"><div className="team-row winner"><span>Vitality</span><strong>2</strong></div><div className="team-row"><span>FURIA</span><strong>1</strong></div></div>
-                  <div className="match-card"><div className="team-row winner"><span>Spirit</span><strong>2</strong></div><div className="team-row"><span>NAVI</span><strong>0</strong></div></div>
-                </div>
-
-                <div className="swiss-column">
-                  <span className="round-label qualified-badge">Classificados (3 Vitórias)</span>
-                  <div className="status-list qualified">
-                    <div><span>3-0</span> <strong>Vitality</strong></div>
-                    <div><span>3-0</span> <strong>Spirit</strong></div>
-                    <div><span>3-1</span> <strong>FURIA</strong></div>
-                    <div><span>3-1</span> <strong>MOUZ</strong></div>
-                    <div><span>3-2</span> <strong>NAVI</strong></div>
-                  </div>
-
-                  <span className="round-label eliminated-badge" style={{ marginTop: '16px' }}>Eliminados (3 Derrotas)</span>
-                  <div className="status-list eliminated">
-                    <div><span>0-3</span> <strong>G2</strong></div>
-                    <div><span>1-3</span> <strong>Aurora</strong></div>
-                  </div>
-                </div>
+            ) : (
+              <div className="groups-wrapper">
+                {Object.entries(groupBy(initial, (m) => m.groupName)).map(([g, list]) => {
+                  const teams = regs.filter((r) => r.group === g);
+                  return (
+                    <div key={g} className="gsl-group-box">
+                      <h3>Grupo {g}</h3>
+                      {t.format === 'ROUND_ROBIN' && (
+                        <table className="standings-table">
+                          <thead><tr><th>Equipe</th><th>J</th><th>V</th><th>D</th><th>SD</th><th>PTS</th></tr></thead>
+                          <tbody>
+                            {buildStandings(teams, list).map((row, i) => (
+                              <tr key={row.team.teamId} className={i === 3 ? 'cutoff-row' : ''}>
+                                <td className="team-cell"><span className={`pos-dot ${i < 4 ? 'qual' : 'elim'}`} />
+                                  <TeamBadge team={{ ...row.team, id: row.team.teamId }} size="sm" /></td>
+                                <td>{row.played}</td><td>{row.wins}</td><td>{row.losses}</td><td>{row.diff > 0 ? `+${row.diff}` : row.diff}</td>
+                                <td><strong>{row.points}</strong></td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+                      <div className="group-rounds">
+                        {Object.entries(groupBy(list, (m) => m.roundNumber)).map(([round, ms]) => (
+                          <div key={round} className="group-round">
+                            <span className="sub-label">{t.format === 'GSL' ? ms[0].roundLabel : `Rodada ${round}`}</span>
+                            {ms.map((m) => <MatchCard key={m.id} match={m} onOpen={open} compact />)}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
+          </section>
+        )}
 
-            {/* MODELO 3: PONTOS CORRIDOS EM GRUPOS */}
-            {currentTournament.templateId === 'round-robin-playoffs' && (
-              <div className="standings-grid">
-                {[
-                  {
-                    group: 'Grupo A',
-                    teams: [
-                      { name: 'Evil Geniuses', m: 5, w: 4, t: 0, l: 1, rd: '+83', p: 12, qualified: true },
-                      { name: 'New England', m: 5, w: 4, t: 0, l: 1, rd: '+27', p: 12, qualified: true },
-                      { name: 'FURIA', m: 5, w: 4, t: 0, l: 1, rd: '+42', p: 12, qualified: true },
-                      { name: 'Triumph', m: 5, w: 2, t: 0, l: 3, rd: '+6', p: 6, qualified: false },
-                      { name: 'Rebirth', m: 5, w: 1, t: 0, l: 4, rd: '-50', p: 3, qualified: false },
-                      { name: 'ImPerium', m: 5, w: 0, t: 0, l: 5, rd: '-108', p: 0, qualified: false },
-                    ],
-                  },
-                  {
-                    group: 'Grupo B',
-                    teams: [
-                      { name: '100 Thieves', m: 5, w: 4, t: 0, l: 1, rd: '+22', p: 12, qualified: true },
-                      { name: 'Team Liquid', m: 5, w: 4, t: 0, l: 1, rd: '+58', p: 12, qualified: true },
-                      { name: 'TeamOne', m: 5, w: 3, t: 0, l: 2, rd: '+8', p: 9, qualified: true },
-                      { name: 'Chaos', m: 5, w: 3, t: 0, l: 2, rd: '+42', p: 9, qualified: false },
-                      { name: 'Mythic', m: 5, w: 1, t: 0, l: 4, rd: '-54', p: 3, qualified: false },
-                      { name: 'RBG', m: 5, w: 0, t: 0, l: 5, rd: '-76', p: 0, qualified: false },
-                    ],
-                  },
-                ].map((grp) => (
-                  <div key={grp.group} className="standings-card">
-                    <h3>{grp.group}</h3>
-                    <table className="standings-table">
-                      <thead>
-                        <tr>
-                          <th>Equipa</th>
-                          <th>J</th>
-                          <th>V</th>
-                          <th>E</th>
-                          <th>D</th>
-                          <th>RD</th>
-                          <th>PTS</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {grp.teams.map((row, index) => (
-                          <tr
-                            key={row.name}
-                            className={index === 2 ? 'cutoff-row' : ''}
-                          >
-                            <td className="team-cell">
-                              <span className={`pos-dot ${row.qualified ? 'qual' : 'elim'}`} />
-                              {row.name}
-                            </td>
-                            <td>{row.m}</td>
-                            <td>{row.w}</td>
-                            <td>{row.t}</td>
-                            <td>{row.l}</td>
-                            <td>{row.rd}</td>
-                            <td><strong>{row.p}</strong></td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+        {/* ===== PLAYOFFS ===== */}
+        {activeTab === 'playoffs' && (
+          <section className="bracket-section">
+            <div className="section-header"><Trophy size={20} className="accent-icon" /><h2>Playoffs — Eliminação Simples</h2></div>
+            {playoffs.length === 0 ? (
+              <p className="empty-note">Os playoffs são montados automaticamente ao fim da fase inicial, com o avanço dos classificados.</p>
+            ) : (
+              <div className="playoffs-grid">
+                {Object.entries(playoffRounds).map(([round, list]) => (
+                  <div key={round} className="bracket-column">
+                    <span className="round-label">{list[0].roundLabel} (MD{list[0].bo})</span>
+                    {list.map((m) => <MatchCard key={m.id} match={m} onOpen={open} />)}
                   </div>
                 ))}
               </div>

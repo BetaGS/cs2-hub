@@ -1,20 +1,29 @@
 import { useState } from 'react';
-import { Shield, UserPlus, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Shield, UserPlus, CircleCheck, ArrowLeft } from 'lucide-react';
+import { api, setToken } from '../../api.js';
 import './Auth.css';
 
-export default function Register({ onNavigate }) {
+export default function Register({ onNavigate, onLogin }) {
+  const [error, setError] = useState('');
   const [nickname, setNickname] = useState('');
   const [role, setRole] = useState('Rifler');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSteamRegister = () => {
-    window.location.href = 'http://localhost:8000/api/auth/steam';
+    setError('Cadastro com a Steam ainda não está disponível — use o registro manual.');
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    console.log('Registo:', { nickname, role, email, password });
+    setError('');
+    try {
+      const { token, user } = await api('/api/auth/register', { method: 'POST', body: { nickname, role, email, password } });
+      setToken(token);
+      if (onLogin) onLogin(user);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const handleGoHome = (e) => {
@@ -55,10 +64,10 @@ export default function Register({ onNavigate }) {
 
         <div className="steam-features">
           <div className="feature-item">
-            <CheckCircle size={14} /> <span>Sincronização do SteamID64</span>
+            <CircleCheck size={14} /> <span>Sincronização do SteamID64</span>
           </div>
           <div className="feature-item">
-            <CheckCircle size={14} /> <span>Verificação de estado VAC</span>
+            <CircleCheck size={14} /> <span>Verificação de estado VAC</span>
           </div>
         </div>
 
@@ -66,6 +75,7 @@ export default function Register({ onNavigate }) {
           <span>ou cria um registo manual</span>
         </div>
 
+        {error && <p className="auth-error">{error}</p>}
         <form onSubmit={handleRegister} className="auth-form">
           <div className="form-group">
             <label>Nickname no CS2</label>
@@ -89,7 +99,7 @@ export default function Register({ onNavigate }) {
               <option value="Rifler">Rifler</option>
               <option value="AWPer">AWPer</option>
               <option value="Entry Fragger">Entry Fragger</option>
-              <option value="In-Game Leader (IGL)">In-Game Leader (IGL)</option>
+              <option value="IGL">IGL (In-Game Leader)</option>
               <option value="Support">Support</option>
               <option value="Lurker">Lurker</option>
             </select>

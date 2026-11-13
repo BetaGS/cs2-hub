@@ -1,4 +1,4 @@
-import { Shield, PlusCircle, LogOut, User } from 'lucide-react';
+import { Shield, CirclePlus, LogOut, User } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar({
@@ -56,7 +56,7 @@ export default function Navbar({
       <div className="nav-actions">
         {onOpenCreateTeam && (
           <button className="btn-create" onClick={onOpenCreateTeam}>
-            <PlusCircle size={18} />
+            <CirclePlus size={18} />
             <span>Criar Time</span>
           </button>
         )}
